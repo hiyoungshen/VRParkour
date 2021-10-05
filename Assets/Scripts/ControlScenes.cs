@@ -13,49 +13,58 @@ public class ControlScenes : MonoBehaviour
     public GameObject[] powerPoleArray;
     public Transform[] powerPolePosArray;
 
+    public GameObject[] cubeArray;
+    public Transform[] cubePosArray;
+
     void Start()
     {
+        spawnObstacle(0);
         spawnObstacle(1);
         spawnObstacle(2);
-        spawnObstacle(3);
     }
     
     public void spawnObstacle(int sceneIndex){
-        // destroy original obstacle
-        // GameObject[] obsPast = GameObject.FindGameObjectsWithTag("Obstacle"+sceneIndex);
-        // Debug.Log("a: "+obsPast.Length);
-        // Debug.Log("b: "+obstacleArray.Length);
-        // Debug.Log("c: "+obstaclePosArray.Length);
-        // for (int i = 0; i < obsPast.Length; i++){
-        //     Destroy(obsPast[i]);
-        // }
         // spawn obstacle
-        for(int i=(sceneIndex-1)*4;i<obstaclePosArray.Length;i++)
+        for(int i=sceneIndex*4, j=0;j<4;i++,j++)
+        {
+            // random choose a object
+            Vector3 eulerAngle = new Vector3(0, Random.Range(0, 360), 0);
+            obstacleArray[i].transform.localEulerAngles = eulerAngle; 
+        }
+    }
+
+    public void SwitchScene(int sceneIndex){
+        int lastIndex=sceneIndex%3;
+        
+        // road
+        Debug.Log("change location of roads 1. ");
+        for(int i=lastIndex*14, j=0;j<14;i++,j++){
+            // Debug.Log(roadArray[i].transform.position+"    "+(roadArray[i].transform.position - new Vector3(105, 0, 0)));
+            roadArray[i].transform.position = roadArray[i].transform.position - new Vector3(105, 0, 0);
+            // Debug.Log(roadArray[i].transform.position);
+        }
+
+        // Powerpole
+        for(int i=lastIndex*18, j=0;j<18;i++,j++){
+            powerPoleArray[i].transform.position = powerPoleArray[i].transform.position - new Vector3(105, 0, 0);
+        }
+
+        // Cube
+        cubeArray[lastIndex].transform.position=cubePosArray[lastIndex].transform.position-new Vector3(105,0,0);
+
+        // Obstacle
+        for(int i=lastIndex*4,j=0;j<4;i++,j++)
         {
             // random choose a object
             // GameObject prefab = obstacleArray[i];
             Vector3 eulerAngle = new Vector3(0, Random.Range(0, 360), 0);
             // GameObject obj = Instantiate(prefab, obstaclePosArray[i].position, Quaternion.Euler(eulerAngle));
             obstacleArray[i].transform.localEulerAngles = eulerAngle; 
+            obstacleArray[i].transform.position=obstacleArray[i].transform.position-new Vector3(105,0,0);
         }
     }
-    public void SwitchScene(int sceneIndex){
-        int lastIndex=(sceneIndex-1)%3;
-        if(lastIndex==0){
-            lastIndex=3;
-        }
-        // road
-        for(int i=(lastIndex-1)*14, j=0;j<14;i++,j++){
-            roadArray[i].transform.position = roadArray[i].transform.position - new Vector3(35, 0, 0);
-        }
-
-        // Powerpole
-        for(int i=(lastIndex-1)*16, j=0;j<16;i++,j++){
-            roadArray[i].transform.position = roadArray[i].transform.position - new Vector3(35, 0, 0);
-        }
-    }
-    void Update()
-    {
+    // void Update()
+    // {
         
-    }
+    // }
 }
