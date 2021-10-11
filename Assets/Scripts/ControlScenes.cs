@@ -16,6 +16,8 @@ public class ControlScenes : MonoBehaviour
     public GameObject[] cubeArray;
     public Transform[] cubePosArray;
 
+    public GameObject[] gemArray;
+
     void Start()
     {
         spawnObstacle(0);
@@ -27,9 +29,13 @@ public class ControlScenes : MonoBehaviour
         // spawn obstacle
         for(int i=sceneIndex*4, j=0;j<4;i++,j++)
         {
-            // random choose a object
             Vector3 eulerAngle = new Vector3(0, Random.Range(0, 360), 0);
             obstacleArray[i].transform.localEulerAngles = eulerAngle; 
+        }
+        // spawn gem
+        for(int i=sceneIndex*8, j=0;j<8;i++,j++){
+            Vector3 eulerAngle = new Vector3(0, Random.Range(0, 360), 0);
+            gemArray[i].transform.localEulerAngles = eulerAngle; 
         }
     }
 
@@ -61,6 +67,16 @@ public class ControlScenes : MonoBehaviour
             // GameObject obj = Instantiate(prefab, obstaclePosArray[i].position, Quaternion.Euler(eulerAngle));
             obstacleArray[i].transform.localEulerAngles = eulerAngle; 
             obstacleArray[i].transform.position=obstacleArray[i].transform.position-new Vector3(105,0,0);
+        }
+
+        // gem
+        for(int i=lastIndex*8,j=0;j<8;i++,j++)
+        {
+            // random choose a object
+            Vector3 eulerAngle = new Vector3(0, Random.Range(0, 360), 0);
+            // GameObject obj = Instantiate(prefab, obstaclePosArray[i].position, Quaternion.Euler(eulerAngle));
+            gemArray[i].transform.localEulerAngles = eulerAngle; 
+            gemArray[i].transform.position=gemArray[i].transform.position-new Vector3(105,0,0);
         }
     }
     // void Update()

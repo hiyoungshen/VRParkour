@@ -24,23 +24,10 @@ public class ControlCamera : MonoBehaviour
 
     void LateUpdate()
     {
-        if(thirdPersonPerspective){
+        // if(thirdPersonPerspective){
             targetPosition = playerPos.position + Vector3.up * height - playerPos.forward * intervalDistance;
             transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * smooth);
-        }
-        else{
-            targetPosition = playerPos.position + playerPos.up * 1.33f + playerPos.forward * (5.5f - 5.067089f);
-            if (smooth < 100f)
-            {
-                smooth += 1f;
-            }
-        }
-
-        // if (controlPlayer.GetGameOver())
-        // {
-        //     targetPosition = playerPos.position + playerPos.up * height - playerPos.forward * (-2f);
         // }
-        // transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * smooth);
     }
     
     public float getCameraLeftRightAngle()

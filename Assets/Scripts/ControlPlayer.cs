@@ -46,15 +46,16 @@ public class ControlPlayer : MonoBehaviour
     private bool cameraLeft=false;
     private bool cameraRight=false;
     private float cameraAngle=0f;
+    private float theta=20;
 
     private int score = 0;
     public TextMeshPro scoreText;
     public TextMeshPro bombText;
     public TextMeshPro textGameOver;
 
-    public GameObject buttonRestart;
-    public GameObject buttonExit;
-    public int bombNum = 3;
+    // public GameObject buttonRestart;
+    // public GameObject buttonExit;
+    public float dist = 0;
     // public AudioSource bgm;
     // public AudioClip[] bgmList;
 
@@ -70,19 +71,31 @@ public class ControlPlayer : MonoBehaviour
         controlScenes = GameObject.Find("ControlScenes").GetComponent<ControlScenes>();
         controlCamera = GameObject.Find("Main Camera").GetComponent<ControlCamera>();
         textGameOver.gameObject.SetActive(false);
-        buttonRestart.gameObject.SetActive(false);
-        buttonExit.gameObject.SetActive(false);
-        setTextBomb();
+        // buttonRestart.gameObject.SetActive(false);
+        // buttonExit.gameObject.SetActive(false);
+        setTextDis();
         setTextScore();
+    }
+
+    float selfAbs(float value){
+        return value>0?value:-value;
+    }
+
+    float quadradicFunc(float x){
+        float a=(-0.5f)/(theta*theta/4f-90f*theta+8100f);
+        float b=-360f*a;
+        float c=32400f*a+1;
+        return a*x*x+b*x+c;
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        dist=selfAbs(transform.position.x);
+        setTextDis();
         // Shorthand for writing Vector3(-1, 0, 0)
         transform.position += Vector3.left * forwardSpeed * Time.deltaTime;
-        Debug.Log("lastState: " + lastState + " curState: " + curState);
+        // Debug.Log("lastState: " + lastState + " curState: " + curState);
         
         if (runTurnLeftAnim){
             if (transform.position.z - turnSpeed * Time.deltaTime > -15.61544f+offset){
@@ -95,13 +108,17 @@ public class ControlPlayer : MonoBehaviour
             }
         }
         if (cameraLeft){
-            // turnSpeed = (360 - controlCamera.getCameraLeftRightAngle()) / 90.0f * 7.0f;
+            // turnSpeed = quadradicFunc(controlCamera.getCameraLeftRightAngle()) * 7.0f;
             if (transform.position.z - turnSpeed * Time.deltaTime > -15.61544f+offset){
                 transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - turnSpeed * Time.deltaTime);
             }
         }
         if (cameraRight){
-            // turnSpeed = controlCamera.getCameraLeftRightAngle() / 90.0f * 7.0f;
+            // cameraAngle=controlCamera.getCameraLeftRightAngle();
+            // if(cameraAngle>=0f&&cameraAngle<=90f-theta/2){
+            //     cameraAngle+=360;
+            // }
+            // turnSpeed = quadradicFunc(cameraAngle) * 7.0f;
             if (transform.position.z - turnSpeed * Time.deltaTime < -3.61544f+offset){
                 transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + turnSpeed * Time.deltaTime);
             }
@@ -297,11 +314,11 @@ public class ControlPlayer : MonoBehaviour
             // Debug.Log("Angle: "+ controlCamera.getCameraLeftRightAngle());
             // 控制手机上根据摄像头的旋转
             cameraAngle=(float)((int)(controlCamera.getCameraLeftRightAngle()+360)%360);
-            isTurnLeft = cameraAngle > 135f && cameraAngle < 225f;
-            isTurnRight=(cameraAngle > 315f && cameraAngle < 360f || 
-            cameraAngle >= 0f && cameraAngle < 45f);
-            isInMid= cameraAngle >= 45f && cameraAngle <= 135f ||
-            cameraAngle >=225f && cameraAngle <= 315f;
+            isTurnLeft = cameraAngle >  (90+theta/2) && cameraAngle < (270-theta/2);
+            isTurnRight=(cameraAngle > (270+theta/2) && cameraAngle < 360f || 
+            cameraAngle >= 0f && cameraAngle < (90-theta/2));
+            isInMid= cameraAngle >= (90-theta/2) && cameraAngle <= (90+theta/2) ||
+            cameraAngle >=(270-theta/2) && cameraAngle <= (270+theta/2);
             // isTurnRight=false;
             // isInMid=false;
             if (isTurnLeft){
@@ -430,8 +447,8 @@ public class ControlPlayer : MonoBehaviour
 
             scoreText.gameObject.SetActive(false);
             bombText.gameObject.SetActive(false);
-            buttonRestart?.gameObject.SetActive(true);
-            buttonExit?.gameObject.SetActive(true);
+            // buttonRestart?.gameObject.SetActive(true);
+            // buttonExit?.gameObject.SetActive(true);
             textGameOver.gameObject.SetActive(true);
             textGameOver.text = "Game Over! \nYour Score is: " + score.ToString() + ".";
 
@@ -452,7 +469,12 @@ public class ControlPlayer : MonoBehaviour
             forwardSpeed = 0;
             anim.SetBool("idle", true);
         }
-        if (other.gameObject.name == "Cube1")
+        else if(other.gameObject.name == "Diamondo" || other.gameObject.name == "Hexgon" || other.gameObject.name == "SoftStar" || other.gameObject.name == "Heart"){
+            // other.gameObject.SetActive(false);
+            score+=1;
+            setTextScore();
+        }
+        else if (other.gameObject.name == "Cube1")
         {
             if(isGameStart){
                 isGameStart=false;
@@ -469,13 +491,14 @@ public class ControlPlayer : MonoBehaviour
         {
             controlScenes.SwitchScene(1);
         }
+        
     }
     void setTextScore()
     {
         scoreText.text = "Score: " + score.ToString();
     }
-    public void setTextBomb()
+    public void setTextDis()
     {
-        bombText.text = "Bomb: " + bombNum.ToString();
+        bombText.text = "Distance: " + dist.ToString();
     }
 }
