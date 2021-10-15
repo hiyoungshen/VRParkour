@@ -10,7 +10,9 @@
 * git clone this project.
 ### Test
 * open it with unity and build with android.
-* directly play this game using apk in directory Android.
+* play this game on android.
+### play method
+* move your head left or right to change the direction character move and eat gem to get score.
 
 ## Others
 * Thanks to [Shuai Wang](https://github.com/WANGSSSSSSS) and Mingli Su for corporate with me.
