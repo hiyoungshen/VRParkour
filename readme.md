@@ -15,7 +15,7 @@
 * move your head left or right to change the direction character move and eat gem to get score.
 
 ## Others
-* Thanks to [Shuai Wang](https://github.com/WANGSSSSSSS) and Mingli Su for corporate with me.
+* Thanks to [Shuai Wang](https://github.com/WANGSSSSSSS) and Mingluo Su for corporate with me.
 
 # References
 * [A tutorial for beginners in 简书](https://www.jianshu.com/p/f43358d02094)
